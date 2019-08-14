@@ -1,0 +1,86 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="ko">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    &lt;!&ndash;  모바일 뷰포트 소스 : 모바일용 컨텐츠 옵션   &ndash;&gt;-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
+
+<!--    <title>Flask Templates</title>-->
+<!--    &lt;!&ndash; 부트스트랩 연동 &ndash;&gt;-->
+<!--    <link rel="stylesheet" href="static/css/bootstrap.min.css">-->
+<!--    <script src="static/js/jquery.min.js"></script>-->
+<!--    <script src="static/js/bootstrap.min.js"></script>-->
+<!--    <style>-->
+
+<!--    /* 상단에 여백 지정 */-->
+<!--    .container { margin-top :15px}-->
+
+<!--    /* 이미지 가변 크기로 지정 */-->
+<!--    img { width:100%; height:auto; }-->
+<!--    .bg-1 { background-color: LemonChiffon   ; color: #ffffff;}-->
+<!--    .bg-4{ background-color: #2f2f2f; color: #ffffff;}-->
+
+<!--    body {padding: 56px 20px;}-->
+
+<!--    &lt;!&ndash;https://getbootstrap.com/docs/4.3/components/navbar/&ndash;&gt;-->
+
+<!--    .navbar {padding-top: 15px;-->
+<!--               padding-bottom: 15px;-->
+<!--               border: 0;-->
+<!--               border-radius: 0;-->
+<!--               margin-bottom: 0;-->
+<!--               font-size: 12px;-->
+<!--               letter-spacing: 5px;}-->
+<!--    .navbar-nav  li a:hover {color: #1abc9c !important;}-->
+
+
+<!--    </style>-->
+
+
+<!--</head>-->
+<!--<body>-->
+
+
+
+<!--div.container>(div.nav>ul>(li>a)*4)+div*2-->
+
+<!--   &lt;!&ndash;  공통 메뉴    &ndash;&gt;-->
+<!--<nav class="navbar navbar-default">-->
+<!--  <div class="container">-->
+<!--    <div class="navbar-header">-->
+<!--      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">-->
+<!--        <span class="icon-bar"></span>-->
+<!--        <span class="icon-bar"></span>-->
+<!--      </button>-->
+<!--      <a class="navbar-brand" href="/">DOG</a>-->
+<!--    </div>-->
+
+<!--    <div class="collapse navbar-collapse" id="myNavbar">-->
+<!--      <ul class="nav navbar-nav navbar-right">-->
+<!--        <li><a href="/bbs">입양</a></li>-->
+<!--        <li><a href="/get">편의시설</a></li>-->
+<!--      </ul>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</nav>-->
+{% extends 'layout.html' %}
+    <div>
+    {% block pageTitle %}{% endblock %}
+     <hr>
+    {% block contents %}
+    </div>
+
+    <div class="container-fluid bg-1 text-center">
+    <h3>Do You Want me?</h3>
+    <img src="static/images/dog1.png" alt="dog1">
+    <h3>Let's Live Together</h3>
+    </div>
+    {% endblock %}
+
+
+
+
+<!----></div>-->
+<!--</body>-->
+
+<!--</html>
