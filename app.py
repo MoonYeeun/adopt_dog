@@ -18,7 +18,7 @@ from flask import session
 # DB 파일 연결
 # import db
 
-# 11
+
 # flask 객체 생성
 app = Flask(__name__)
 
