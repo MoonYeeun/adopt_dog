@@ -17,9 +17,9 @@
 
     <h3>강아지 정보</h3>
 
-    <ul><img src={{dog_image2}}>
+    <ul><img src={{dog_image}}>
         {% for i in dog_list%}
-        <li>{{i}}</li>
+        <li>{{i}} : {{dog_list[i]}}</li>
         {% endfor %}
     </ul>
     <h3>보호소 정보</h3>
