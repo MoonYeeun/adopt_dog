@@ -1,0 +1,200 @@
+{% extends 'layout.html' %}
+
+<div>
+    {% block pageTitle %}{% endblock %}
+    <hr>
+    {% block contents %}
+
+
+    <div class="container bg-1 text-center">
+
+        <br>
+        <div class="bg-2 text-center">
+            <br>
+            <table align="center" border="0" cellpadding="10px" cellspacing="0px" height="20px" width="700px">
+                <tr>
+                    <td class="text-center" colspan="3" style="color:black">
+                        강아지를...
+                    </td>
+                    <!--                    <td></td>-->
+                    <!--                    <td></td>-->
+                </tr>
+            </table>
+
+            <br>
+            <form action="/main_survey" method="post">
+                <label for="money"></label>
+                <select class="btn btn-dropdown" id="money" name="money" required
+                        style="color:DimGrey; background:Cornsilk;">
+                    <option disabled selected value="">--비용--</option>
+                    <option value="10만원">10만원</option>
+                    <option value="17만원">17만원</option>
+                    <option value="20만원">20만원</option>
+                    <option value="35만원">35만원</option>
+                    <option value="40만원">40만원</option>
+                    <option value="60만원">60만원</option>
+                    <option value="75만원">75만원</option>
+                    <option value="150만원">150만원</option>
+
+                </select>
+
+                <label for="time"></label>
+                <select class="btn btn-dropdown" id="time" name="time" required
+                        style="color:DimGrey; background:Cornsilk;">
+                    <option disabled selected value="">--산책횟수--</option>
+                    <option value="1회">1회</option>
+                    <option value="2회">2회</option>
+                    <option value="3회">3회</option>
+                    <option value="4회">4회</option>
+                    <option value="5회">5회</option>
+                    <option value="6회">6회</option>
+                    <option value="7회">7회</option>
+                </select>
+
+                <label for="hospital"></label>
+                <select class="btn btn-dropdown" id="hospital" name="hospital" required
+                        style="color:DimGrey; background:Cornsilk;">
+                    <option disabled selected value="">--구를 선택해주세요--</option>
+                    <option value="강남구">강남구</option>
+                    <option value="강동구">강동구</option>
+                    <option value="강북구">강북구</option>
+                    <option value="강서구">강서구</option>
+                    <option value="관악구">관악구</option>
+                    <option value="광진구">광진구</option>
+                    <option value="구로구">구로구</option>
+                    <option value="금천구">금천구</option>
+                    <option value="노원구">노원구</option>
+                    <option value="도봉구">도봉구</option>
+                    <option value="동대문구">동대문구</option>
+                    <option value="동작구">동작구</option>
+                    <option value="마포구">마포구</option>
+                    <option value="서대문구">서대문구</option>
+                    <option value="서초구">서초구</option>
+                    <option value="성동구">성동구</option>
+                    <option value="성북구">성북구</option>
+                    <option value="송파구">송파구</option>
+                    <option value="양천구">양천구</option>
+                    <option value="영등포구">영등포구</option>
+                    <option value="용산구">용산구</option>
+                    <option value="은평구">은평구</option>
+                    <option value="종로구">종로구</option>
+                    <option value="중구">중구</option>
+                    <option value="중랑구">중랑구</option>
+                </select>
+
+                {% if clicked %}
+                <input name="clicked" type="hidden" value="clicked">
+                {% else %}
+                <input name="clicked" type="hidden" value="">
+                {% endif %}
+
+                <div class="btn-group">
+                    <!--                    <label for="click"></label>-->
+                    <button class="btn btn-basic" id="click" name="click" onclick="return formCheck();"
+                            style="color:saddlebrown" type="submit"
+                            value="완료">조회
+                    </button>
+                </div>
+            </form>
+
+            <script>
+    function formCheck(){
+        var money = document.forms[0].money.value;
+        if (money == null || money == "") {
+            alert('사용할 수 있는 비용을 입력하세요.');
+            document.forms[0].money.focus();
+            return false;
+        }
+            var time = document.forms[0].time.value;
+        if (time == null || time == "") {
+            alert('산책 가능한 횟수를 입력하세요.');
+            document.forms[0].time.focus();
+            return false;
+        }
+            var hospital = document.forms[0].hospital.value;
+        if (hospital == null || hospital == "") {
+            alert('구를 입력하세요.');
+            document.forms[0].hospital.focus();
+            return false;
+        }
+        return true;
+    }
+
+            </script>
+            <script>
+                function checkIt(){
+                    var click = document.forms[0].clicked.value;
+                    if(click != "clicked")
+                    {
+                        alert("조회버튼을 먼저 클릭하여 주세요.");
+                        return false;
+                    }
+                    else
+                    {
+                        document.location.href="/home";
+                    }
+                }
+
+
+            </script>
+
+            <table align="center" border="0" cellpadding="10px" cellspacing="0px" height="530px" width="700px">
+                <tr>
+                    <td height="43%" width="19%">
+                        {% if money %}-->
+                        <img alt='df' src='../static/rate3.png' style="width:90%;height:auto;"/>
+                        {% endif %}
+                    </td>
+                    <td height="43%" width="40.5%">
+                        {% if money %}-->
+                        <img alt='df' src='../static/money_image/{{money}}.png' style="width:90%;height:auto;"/>
+                        {% endif %}
+                    </td>
+                    <td height="43%" width="40.5%">
+                        {% if count %}-->
+                        <img alt='df' src='../static/countimg/{{count}}.png' style="width:90%;height:auto; "/>
+                        {% endif %}
+                    </td>
+
+                </tr>
+                <tr>
+
+                    <td height="47%" width="19%">
+                    </td>
+                    &nbsp
+                    <td height="47%" width="40.5%">
+                        {% if hospital %}
+                        <img alt='df' src='../static/hospital_image/{{hospital}}.png' style="width:90%;height:auto"/>
+                        {% endif %}
+                    </td>
+                    <td height="47%" width="40.5%">
+                        {% if gu %}
+                        <img alt='df' src='../static/parkimg/{{gu}}.png' style="width:90%;height:auto"/>
+                        {% endif %}
+                    </td>
+                </tr>
+<!--                <tr>-->
+<!--                    <td height="10%" width="19%">-->
+<!--                    </td>-->
+<!--                    <td height="10%" width="40.5%">-->
+<!--                    </td>-->
+<!--                    <td height="10%" width="40.5%">-->
+<!--                    </td>-->
+
+<!--                </tr>-->
+            </table>
+
+
+<!--                    #fixedbutton {-->
+<!--                    position: fixed;-->
+<!--                    bottom: 5000px;-->
+<!--                    right: auto;-->
+<!--                    left:48%;-->
+<!--                    }-->
+            <div class="btn-group" id="fixedbutton">
+                <button class="btn btn-basic" onclick="javascript:checkIt();" style="color:saddlebrown" type="button">확인</button>
+            </div>
+
+
+
+            {% endblock %}
