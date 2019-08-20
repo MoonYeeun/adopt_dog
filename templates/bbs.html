@@ -8,69 +8,61 @@
 {% block contents %}
 
 
-<hr>
+<br>
 &nbsp
 &nbsp
 &nbsp
-    <form action="/select_dog" method="post">
-        <div class="form-group">
-        <label for="location"></label>
-        <select name = "location" id="location">
-          <option value="" selected disabled hidden>--구--</option>
-          <option value="강남구">강남구</option>
-          <option value="강서구">강서구</option>
-          <option value="강북구">강북구</option>
-          <option value="중구">중구</option>
-     ` </select>
-        </div>
 
-        <div class="form-group">
+ <form action="">
+<div style="text-align:center">
+&nbsp
+
         <label for="sort"></label>
-        <select name = "sort" id="sort" required placeholder="sort" class="form-control">
-          <option value="" selected disabled hidden>--종--</option>
+    <select name = "" id="sort"  style="color:slateBlue" required>
+          <option value="" selected disabled>--종--</option>
           <option value="골든리트리버">골든리트리버</option>
           <option value="비숑">비숑</option>
-          <option value="푸들">푸들</option>
-          <option value="스피츠">스피츠</option>
-            <option value="시츄">시츄</option>
-        </select>
-        </div>
-        <div class="form-group">
-        <label for="age"></label>
-        <select name = "age" id="age">
-          <option value="" selected disabled hidden>--나이--</option>
-          <option value="1세">1세</option>
-          <option value="2세">2세</option>
-          <option value="3세">3세</option>
-        </select></div>
-        <div class="form-group">
+          <option value="보더콜리">보더콜리</option>
+          <option value="웰시코기">웰시코기</option>
+      </select>
+
+&nbsp
+
+
         <label for="haircolor"></label>
-        <select name = "haircolor" id="haircolor">
-          <option value="" selected disabled hidden>--털색--</option>
+    <select name = "" id="haircolor" style="color:slateBlue" required>
+          <option value="" selected disabled>--털색--</option>
           <option value="골드" >골드</option>
           <option value="갈색">갈색</option>
           <option value="흰색">흰색</option>
-        </select></div>
-        <div class="form-group">
+    </select>
+
+&nbsp
+
         <label for="neutral"></label>
-        <select name = "neutral" id="neutral">
-          <option value="" selected disabled hidden>--중성화--</option>
+    <select name = "" id="neutral" style="color:slateBlue" required>
+          <option value="" selected disabled>--중성화--</option>
           <option value="Y">Y</option>
           <option value="N">N</option>
-            <option value="U">U</option>
-        </select></div>
-        <div class="form-group">
-        <label for="sex" ></label>
-        <select name = "sex" id="sex" >
-          <option value="" selected disabled hidden>--성별--</option>
-          <option value="F">F</option>
-          <option value="M">M</option>
-        </select></div>
+    </select>
+&nbsp
 
+        <label for="sex" ></label>
+    <select name = "" id="sex" style="color:slateBlue" required>
+          <option value="" selected disabled>--성별--</option>
+          <option value="여자">여자</option>
+          <option value="남자">남자</option>
+    </select>
+&nbsp
+&nbsp
+&nbsp
       <div class="btn-group">
-          <a href="/map"><button type="submit" value="완료" class="btn btn-success">조회</button></a>
-        </div>
+    <button style = "color:saddlebrown" type="submit" value="완료">조회</button>
+      </div>
+
+</div>
     </form>
+
 
 
 
@@ -79,8 +71,8 @@
  </div>
 
 
-<hr>
-<a href="/">HOME</a>
+<br>
+<a href="/home">HOME</a>
 {% endblock %}
 
 

@@ -16,31 +16,36 @@
     .container { margin-top :15px}
 
     /* 이미지 가변 크기로 지정 */
-    img { width:100%; height:auto; }
-    .bg-1 { background-color: LemonChiffon   ; color: #ffffff;}
-    .bg-4{ background-color: #2f2f2f; color: #ffffff;}
+<!--    img { width:500px; height:500px; }-->
+    .bg-1 { background-color: #556B8F   ; color: #ffffff;  width:1000px; height:750px;}
+    .bg-2 { background-color: #ffffff   ; color: #ffffff;  width:950px; height:700px; margin:6px auto;}
+    .bg-3 { background-color: #2f2f2f   ; color: #ffffff;  width:900px; height:600px; margin:6px auto;}
 
-    body {padding: 56px 20px;}
 
-    <!--https://getbootstrap.com/docs/4.3/components/navbar/-->
+    body {padding: 70px 30px;}
 
-    .navbar {padding-top: 15px;
-               padding-bottom: 15px;
-               border: 0;
-               border-radius: 0;
-               margin-bottom: 0;
-               font-size: 12px;
-               letter-spacing: 5px;}
+    .navbar-fixed-top {height: 70px !important;}
+
+<!--    .navbar {padding-top: 15px;-->
+<!--               padding-bottom: 15px;-->
+<!--               border: 0;-->
+<!--               border-radius: 0px;-->
+<!--               margin:-->
+<!--               margin-bottom: 0;-->
+<!--               font-size: 20px;-->
+<!--               letter-spacing: 5px;}-->
+
     .navbar-nav  li a:hover {color: #1abc9c !important;}
-    .navbar-brand  li a:hover {color: #1abc9c !important;}
+     li a:hover {color: #1abc9c !important;}
     </style>
 
 </head>
 <body>
 
    <!--  공통 메뉴    -->
-<nav class="navbar navbar-default">
-  <div class="container">
+<!--<nav class="navbar navbar-default" style="margin : 0px 325px 0px 325px">-->
+<nav class="navbar navbar-default" style="margin : 300 auto" >
+  <div class="container" ">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
         <span class="icon-bar"></span>
@@ -53,13 +58,13 @@
 
     <div class="collapse navbar-collapse" id="myNavbar">
 
-<!--       <li class="nav navbar-brand navbar-left">-->
-<!--        <a href="/">DOG</a>-->
-<!--       </li>-->
+       <li class="nav navbar-brand navbar-left" >
+        <a href="/" style="font-size:30px">DOG</a>
+       </li>
 
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="/bbs">입양</a></li>
-        <li><a href="/get">편의시설</a></li>
+        <li><a href="/bbs" style="font-size:20px">입양</a></li>
+        <li><a href="/get" style="font-size:20px">편의시설</a></li>
       </ul>
     </div>
   </div>
@@ -68,12 +73,12 @@
 
     <div>
     {% block pageTitle %}{% endblock %}
-     <hr>
+     <br>
     {% block contents %}{% endblock %}
     </div>
 
 
-
+<br>
     <!--  푸터 디자인 : 패널과 중앙정렬    -->
     <div class="panel panel-default">
         <div class="panel-footer">
