@@ -51,14 +51,6 @@ def bbs():
 @app.route('/get',methods=['GET'])
 def get():
     return render_template('get.html')
-
-# @app.route('/choose_dog', methods=['GET'])
-# def choose_dog():
-#     dog_code = request.args.get('code')
-#     print(dog_code)
-#     return render_template('choose_dog.html',dog_code=dog_code)
-
-
 #@app.route('/', methods=['GET','POST'])
 def show_map():
     # 사용자가 선택한 조건에 따른 유기견 검색
