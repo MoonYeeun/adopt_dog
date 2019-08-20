@@ -8,6 +8,9 @@ import xml.etree.ElementTree as ET
 import folium
 import pprint
 import requests
+from tqdm import tqdm_notebook
+import pandas
+import numpy
 
 decode_key = unquote('WF9v2HhErnR0ovu%2FVJJX8InWINAh4ZaZrMPvZLpcK%2FkXGR3V9%2F3kAQyfKuilCn7LqLPIZlnh97Ed3TxFoLkbrA%3D%3D')  # decode 해줍니다.
 
@@ -212,14 +215,6 @@ def make_shelter_list(code):
             print('shelter - 찾으시는 강아지가 없습니다.')
     return dog_shelter
 
-
-# print('\n<강아지 정보>')
-# for i in dog_list:
-#     print(i)
-# print('\n<보호소 정보>')
-# for i in dog_shelter:
-#     print(i)
-
 @app.route('/show_dog_list', methods=['GET'])
 def show_dog_list():
 
@@ -231,81 +226,89 @@ def show_dog_list():
 
     return render_template('show_dog_list.html', dog_image=dog_list['사진파일'], dog_list=dog_list, dog_shelter=dog_shelter )
 
+# 편의시설 - 병원 위치 보여주기
+@app.route('/hospital')
+@app.route('/hospital/<gugu>')
+def show_hospitals(gugu=None):
+    if gugu==None:
+        gugu='강남구'
 
-# # login.html 페이지에서 버튼을 눌렀을때 이동하는 라우터
-# # @app.route('/', methods=['GET'])
-# # @app.route('/index', methods=['GET'])
-# # def index():
-# #     # 세션이 있는지 없는지에 따라 html 분기
-# #     if not session.get('logged_in'):
-# #         return render_template('login.html')
-# #     else:
-# #         return render_template('logout.html')
-#
-# # login.html 페이지에서 버튼을 눌렀을때 이동하는 라우터
-# @app.route('/login', methods=['POST'])
-# def login():
-#     # login.html의 폼필드의 데이값 확인
-#     userId = request.form['userId']
-#     password = request.form['password']
-#     print(userId, password)
-#     # DB의 레코드를 리스트로 저장
-#     member_list = db.get_member_list()
-#
-#     # 레코드의 아이디와 패스워드의 아이디가 있으면 True
-#     # 없으면 False 역할을 하는 변수
-#     userIdCheck = userPwdCheck = False
-#
-#     # DB의 전체 레코드 값과 비교
-#     # len(member_list) => DB의 전체 레코드수
-#     # DB의 아이디값과 같으면 True
-#     for i in range(0, len(member_list)):
-#         if userId in member_list[i]['user_id']:
-#             userIdCheck = True
-#             print('userIdCheck = > ' , userIdCheck)
-#             # 패스워드 비교를 위해서 idx 변수에 저장
-#             idx = i
-#             break
-#         else:
-#             continue
-#
-#     # 폼필드의 패스워드랑 DB의 패스워드랑 비교
-#     if member_list[idx]['user_password'] == password:
-#         userPwdCheck = True
-#         print('userPwdCheck => ', userPwdCheck)
-#
-#     # 아이디랑 비밀번호가 모두 맞다면(True) 세션 설정
-#     if userIdCheck and userPwdCheck:
-#         session['logged_in'] = True
-#
-#     # 첫페이지로 이동해서 세션 판단
-#     return index()
-#
-# # 로그인 상태에서 로그아웃 하이퍼링크 클릭시 적용되는 라우터
-# @app.route('/logout')
-# def logout():
-#     session.clear()
-#     return index()
-#
-# # 상단 Join 메뉴 클릭시 회원가입페이지로 이동하는 라우터
-# @app.route('/join')
-# def join():
-#     return render_template('join.html')
-#
-# # 회원가입폼에서 텍스트필드를 입력받은 후
-# # DB에 추가하는 라우터
-# @app.route('/joinPro', methods=['post'])
-# def joinPro():
-#     userId = request.form['userId']
-#     password = request.form['password']
-#     print(userId, password)
-#     db.addDb_member(userId, password)
-#     # return 'success'
-#     # 회원가입 완료 페이지로 이동
-#     return render_template('joinResult.html')
-#
-#
-# # 앱 실행  --> 마지막 위치 유지
-# # 웹주소와 포트 지정
+    dog_hospital = pd.read_csv('static/csv/hospital/서울시 '+gugu+' 동물병원 현황.csv', encoding='utf-8')
+    dog_hospital = dog_hospital[(dog_hospital['영업상태'] == '정상')]
+    view_columns = ['업소명', '사업장소재지(지번)', '전화번호']
+    dog_hospital = dog_hospital[view_columns]
+    dog_hospital.rename(columns={dog_hospital.columns[1]: '위치'},
+                        inplace=True)
+    dog_hospital = dog_hospital.dropna(how='any')
+    geo_dog = dog_hospital
+
+    lat = []
+    lng = []
+    for n in tqdm_notebook(geo_dog.index):
+        try:
+            tmp_add = str(geo_dog['위치'][n]).split('(')[0]
+            tmp_map = gmaps.geocode(tmp_add)
+
+            tmp_loc = tmp_map[0].get('geometry')
+            lat.append(tmp_loc['location']['lat'])
+            lng.append(tmp_loc['location']['lng'])
+
+        except:
+            lat.append(np.nan)
+            lng.append(np.nan)
+            print('Here is nan!')
+
+    geo_dog['lat'] = lat
+    geo_dog['lng'] = lng
+
+    map = folium.Map(location=[geo_dog['lat'].mean(),
+                               geo_dog['lng'].mean()],
+                     zoom_start=12)
+    for n in geo_dog.index:
+        hospital_name = geo_dog.loc[n, '업소명'] + '-' + geo_dog.loc[n, '위치']
+        folium.Marker([geo_dog.loc[n, 'lat'],geo_dog.loc[n, 'lng']],popup=hospital_name).add_to(map)  # marker는 크기 지정이 안되어서 하려면 circle marker로 해야 함
+    map
+
+    return map._repr_html_()
+
+# 편의시설 - 공원위치 보여주기
+@app.route('/park')
+@app.route('/park/<gugu>')
+def park_html(gugu=None):
+    if gugu == None:
+        gugu = '강남구'
+
+    park = pd.read_csv('static/csv/park/park' + gugu + '.csv', encoding='utf-8')
+    view_columns = ['공원명', '지역', '위치', '전화번호']
+    park = park[view_columns]
+    geo_park = park
+    lat = []
+    lng = []
+
+    for n in tqdm_notebook(geo_park.index):
+        try:
+            tmp_add = str(geo_park['위치'][n]).split('(')[0]
+            tmp_map = gmaps.geocode(tmp_add)
+
+            tmp_loc = tmp_map[0].get('geometry')
+            lat.append(tmp_loc['location']['lat'])
+            lng.append(tmp_loc['location']['lng'])
+
+        except:
+            lat.append(np.nan)
+            lng.append(np.nan)
+            print('Here is nan!')
+
+    geo_park['lat'] = lat
+    geo_park['lng'] = lng
+
+    map = folium.Map(location=[geo_park['lat'].mean(), geo_park['lng'].mean()], zoom_start=12)
+
+    for n in geo_park.index:
+        park_name = geo_park.loc[n, '공원명'] + '-' + geo_park.loc[n, '위치']
+        folium.Marker([geo_park.loc[n, 'lat'], geo_park.loc[n, 'lng']], popup=park_name).add_to(map)
+
+    return map._repr_html_()
+
 app.run(host='127.0.0.1', port=5000, debug=True)
 
