@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>강아지 & 병원 정보 보여주기</title>
+    <link rel="stylesheet" href="'static/css/bootstrap.min.css">
+    <script src="static/js/jquery.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+
+    <style>
+        img{width:50%, height:auto;}
+    </style>
+</head>
+
+<body>
+<h1>강아지 & 병원 정보 보여주기</h1>
+
+    <h3>강아지 정보</h3>
+
+    <ul><img src={{dog_image}}>
+        {% for i in dog_list%}
+        <li>{{i}} : {{dog_list[i]}}</li>
+        {% endfor %}
+    </ul>
+    <h3>보호소 정보</h3>
+    <ul>{% for i in dog_shelter%}
+        <li>{{i}}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
