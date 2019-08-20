@@ -16,7 +16,8 @@ import googlemaps as gmaps
 import matplotlib.pyplot as plt
 
 decode_key = unquote('WF9v2HhErnR0ovu%2FVJJX8InWINAh4ZaZrMPvZLpcK%2FkXGR3V9%2F3kAQyfKuilCn7LqLPIZlnh97Ed3TxFoLkbrA%3D%3D')  # decode 해줍니다.
-
+gmaps_key="AIzaSyC2dDq-4r8MTzLsw_7Y2XCe5wwuq46Ve4k"
+gmaps=gmaps.Client(key=gmaps_key)
 # flask 객체 생성
 app = Flask(__name__)
 
@@ -140,36 +141,53 @@ def getGeoData(address):
     return [lat, lng]
 
 # 사용자가 선택한 강아지의 정보를 보여주는 함수
-@app.route('/select_dog', methods=['GET', 'POST'])
-def show_dog():
+@app.route('/select_dog', methods=['GET'])
+@app.route('/select_dog/<sort>/<neutral>/<sex>')
+def select_dog(sort='', neutral='', sex=''):
+    if sort == '': # 처음 화면
+        location = [37.5103, 126.982]
+        map = folium.Map(location=[37.5103, 126.982], zoom_start=12, titles='Stamen Toner')
+        folium.Marker(location, icon=folium.Icon(color='red')).add_to(map)
     # 사용자가 선택한 조건에 따른 유기견 검색
-    #location = request.form['location']
-    sort = request.form['sort']
+    # location = request.form['location']
+    # sort = request.form['sort']
     # haircolor = request.form['haircolor']
-    neutral = request.form['neutral']
-    sex = request.form['sex']
-    print(sort, neutral,sex)
+    # neutral = request.form['neutral']
+    # sex = request.form['sex']
+    else:
+        sort = sort
+        if neutral == '.':
+            neutral = ''
+        elif sex == '.':
+            sex = ''
+        else:
+            neutral = neutral
+            sex = sex
+        print(sort, neutral, sex)
+        # 주소 담을 리스트
+        dog_data = {}
+        care_location = []
+        note = adopt_dog_api()
 
-    # 주소 담을 리스트
-    dog_data = {}
-    care_location = []
-    note = adopt_dog_api()
+        for i in note.iter("item"):
+            if ('보호중' in i.findtext('processState')) & (sort in i.findtext("kindCd")) & (
+                    neutral in i.findtext("neuterYn")) & (sex in i.findtext("sexCd")):
+                print(i.findtext('careAddr'))
+                dog_data[i.findtext('desertionNo')] = i.findtext('careAddr')
+                care_location.append(i.findtext('careNm'))  # 유기견 보호센터 이름
 
-    for i in note.iter("item"):
-        if ('보호중' in i.findtext('processState'))&(sort in i.findtext("kindCd")) & (neutral in i.findtext("neuterYn")) & (sex in i.findtext("sexCd")):
-            print(i.findtext('careAddr'))
-            dog_data[i.findtext('desertionNo')] = i.findtext('careAddr')
-            care_location.append(i.findtext('careNm')) # 유기견 보호센터 이름
+        map = folium.Map(location=[37.5103, 126.982], zoom_start=12, titles='Stamen Toner')
+        num = 0
+        for i in dog_data:
+            geoData = getGeoData(dog_data.get(i))
+            print(i)
+            # folium.Marker(geoData, popup=i, icon=folium.Icon(color='red')).add_to(map)
+            folium.Marker(geoData, popup=folium.Popup(
+                '<a href="http://127.0.0.1:5000/show_dog_list?code=' + i + '" target="_self">' + dog_data[i] + '</a>',
+                show=True), icon=folium.Icon(color='red')).add_to(map)
+            num += 1
 
-    map = folium.Map(location=[37.5103, 126.982], zoom_start=12,titles='Stamen Toner')
 
-    num = 0
-    for i in dog_data:
-        geoData = getGeoData(dog_data.get(i))
-        print(i)
-        #folium.Marker(geoData, popup=i, icon=folium.Icon(color='red')).add_to(map)
-        folium.Marker(geoData, popup=folium.Popup('<a href="http://127.0.0.1:5000/show_dog_list?code=' + i +'" target="_self">'+ care_location[num] +'</a>',show=True), icon=folium.Icon(color='red')).add_to(map)
-        num +=1
     return map._repr_html_()
 
 # 사용자가 선택한 강아지 파일 추출
