@@ -62,15 +62,6 @@
 <!--        <option value="3세">3세</option>-->
 <!--    </select>-->
 
-    <label for="haircolor"></label>
-    <select class="btn btn-dropdown" id="haircolor" name="haircolor" required
-            style="color:DimGrey; background:#e6f2ff;">
-        <option disabled hidden selected value="">--털색--</option>
-        <option value="골드">골드</option>
-        <option value="갈색">갈색</option>
-        <option value="흰색">흰색</option>
-    </select>
-
     <label for="neutral"></label>
     <select class="btn btn-dropdown" id="neutral" name="neutral" required
             style="color:DimGrey; background:#e6f2ff;">
@@ -89,11 +80,35 @@
     </select>
 
     <div class="btn-group">
-        <button class="btn btn-basic" onclick="return formCheck();" style="color:saddlebrown" type="button" value="">조회</button>
+        <button class="btn btn-basic" onclick="formCheck()" style="color:saddlebrown" type="button" value="">조회</button>
     </div>
 </form>
-
 <script>
+    function formCheck(){
+        console.log('fun start');
+        var sort = document.getElementById('sort').value;
+        if (sort == null || sort == "") {
+            alert('종을 선택해주세요.');
+            document.forms.elements[0].focus();
+            return false;
+        }
+            var neutral = document.getElementById('neutral').value;
+        if (neutral == null || neutral == "") {
+            alert('중성화 여부를 선택해주세요.');
+            document.getElementById('neutral').focus();
+            return false;
+        }
+         var sex = document.getElementById('sex').value;
+        if (sex == null || sex == "") {
+            alert('성별을 선택해주세요.');
+            document.getElementById('sex').focus();
+            return false;
+        }
+        else {
+         changeIframeUrl();
+      }}
+
+
     function changeIframeUrl()
     {
         var target1 = document.getElementById("sort");
@@ -104,72 +119,9 @@
 
         var target3 = document.getElementById("sex");
         sex = target3.options[target3.selectedIndex].value;
-        document.getElementById("map_frame").src = '/select_dog/' + sort + '/' +  neutral + '/' +  sex;
-<!--        if (neutral == ''){-->
-<!--            document.getElementById("map_frame").src = '/select_dog/' + sort + '/' +  sex;-->
-<!--        }-->
-<!--        else if (sex == ''){-->
-<!--            document.getElementById("map_frame").src = '/select_dog/' + sort + '/' +  neutral + '/' + '';-->
-<!--        }-->
-<!--        else if (sex == '' && neutral == ''){-->
-<!--            document.getElementById("map_frame").src = '/select_dog/' + sort + '' + '/' + '';-->
-<!--        }-->
-<!--        else{-->
-<!--            -->
-<!--        }-->
+
+        document.getElementById("map_frame").src = '/select_dog/' + sort + '/'+  neutral + '/' +  sex;
     }
-
-
-
-
-
-
-</script>
-<script>
-    function formCheck(){
-        var sort = document.forms[0].sort.value;
-        if (sort == null || sort == "") {
-            alert('종을 선택해주세요.');
-            document.forms[0].sort.focus();
-            return false;
-        }
-        var haircolor = document.forms[0].haircolor.value;
-        if (haircolor == null || haircolor == "") {
-            alert('털 색을 선택해주세요.');
-            document.forms[0].haircolor.focus();
-            return false;
-        }
-            var neutral = document.forms[0].neutral.value;
-        if (neutral == null || neutral == "") {
-            alert('중성화 여부를 선택해주세요.');
-            document.forms[0].neutral.focus();
-            return false;
-        }
-         var sex = document.forms[0].sex.value;
-        if (sex == null || sex == "") {
-            alert('성별을 선택해주세요.');
-            document.forms[0].sex.focus();
-            return false;
-        } else {
-         changeIframeUrl();
-      }
-
-
-    function changeIframeUrl()
-    {
-        var target1 = document.getElementById("sort");
-        sort = target1.options[target1.selectedIndex].value;
-
-        var target2 = document.getElementById("haircolor");
-        haircolor = target2.options[target2.selectedIndex].value;
-
-        var target3 = document.getElementById("neutral");
-        neutral = target3.options[target3.selectedIndex].value;
-
-        var target4 = document.getElementById("sex");
-        sex = target4.options[target4.selectedIndex].value;
-
-        document.getElementById("map_frame").src = '/select_dog/' + sort + '/' +  haircolor + '/'+  neutral + '/' +  sex;
 
 
 </script>

@@ -2,14 +2,16 @@
 from flask import Flask, render_template, request
 # 세션 기능을 위한 모듈
 from flask import session
-# DB 파일 연결
-import db
 import urllib.request
 from urllib.parse import urlencode, quote_plus, unquote
 import xml.etree.ElementTree as ET
 import folium
-import pprint
 import requests
+from tqdm import tqdm_notebook
+import googlemaps as gmaps
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 decode_key = unquote('WF9v2HhErnR0ovu%2FVJJX8InWINAh4ZaZrMPvZLpcK%2FkXGR3V9%2F3kAQyfKuilCn7LqLPIZlnh97Ed3TxFoLkbrA%3D%3D')  # decode 해줍니다.
 gmaps_key="AIzaSyC2dDq-4r8MTzLsw_7Y2XCe5wwuq46Ve4k"
@@ -47,32 +49,6 @@ def bbs():
 @app.route('/get',methods=['GET'])
 def get():
     return render_template('get.html')
-#@app.route('/', methods=['GET','POST'])
-def show_map():
-    # 사용자가 선택한 조건에 따른 유기견 검색
-    # location = request.form['location']
-    # sort = request.form['sort']
-    # age = request.form['age']
-    # haircolor = request.form['haircolor']
-    # neutral = request.form['neutral']
-    # sex = request.form['sex']
-
-    # 주소 담을 리스트
-    address = []
-    note = adopt_dog_api()
-
-    for i in note.iter("careAddr"):
-        place = i.text
-        if '서울특별시' in place:
-            print(place)
-            address.append(place)
-    map = folium.Map(location=[37.5103, 126.982], zoom_start=12)
-    for i in address:
-        geoData = getGeoData(i)
-        folium.Marker(geoData, popup=i, icon=folium.Icon(color='red')).add_to(map)
-
-    return map._repr_html_()
-    # return render_template('choose_dog.html',address=address)
 
 # api에서 유기견 정보 받아오는 함수
 def adopt_dog_api():
