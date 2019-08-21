@@ -14,7 +14,7 @@
             <table align="center" border="0" cellpadding="10px" cellspacing="0px" height="20px" width="700px">
                 <tr>
                     <td class="text-center" colspan="3" style="color:black">
-                        강아지를...
+                        강아지를 키울준비가 되셨나요?
                     </td>
                     <!--                    <td></td>-->
                     <!--                    <td></td>-->
@@ -25,7 +25,7 @@
             <form action="/main_survey" method="post">
                 <label for="money"></label>
                 <select class="btn btn-dropdown" id="money" name="money" required
-                        style="color:DimGrey; background:Cornsilk;">
+                        style="color:DimGrey; background:#e6f2ff;">
                     <option disabled selected value="">--비용--</option>
                     <option value="10만원">10만원</option>
                     <option value="17만원">17만원</option>
@@ -40,7 +40,7 @@
 
                 <label for="time"></label>
                 <select class="btn btn-dropdown" id="time" name="time" required
-                        style="color:DimGrey; background:Cornsilk;">
+                        style="color:DimGrey; background:#e6f2ff;">
                     <option disabled selected value="">--산책횟수--</option>
                     <option value="1회">1회</option>
                     <option value="2회">2회</option>
@@ -53,7 +53,7 @@
 
                 <label for="hospital"></label>
                 <select class="btn btn-dropdown" id="hospital" name="hospital" required
-                        style="color:DimGrey; background:Cornsilk;">
+                        style="color:DimGrey; background:#e6f2ff;">
                     <option disabled selected value="">--구를 선택해주세요--</option>
                     <option value="강남구">강남구</option>
                     <option value="강동구">강동구</option>
@@ -173,29 +173,32 @@
                         {% endif %}
                     </td>
                 </tr>
-<!--                <tr>-->
-<!--                    <td height="10%" width="19%">-->
-<!--                    </td>-->
-<!--                    <td height="10%" width="40.5%">-->
-<!--                    </td>-->
-<!--                    <td height="10%" width="40.5%">-->
-<!--                    </td>-->
+                <tr>
+                    <td colspan="3" height="10%" width="19%">
+                        <div class="btn-group" id="fixedbutton">
+                            <button class="btn btn-basic" onclick="javascript:checkIt();" style="color:saddlebrown"
+                                    type="button">
+                                확인
+                            </button>
+                        </div>
+                    </td>
+                    <!--                    <td height="10%" width="40.5%">-->
+                    <!--                    </td>-->
+                    <!--                    <td height="10%" width="40.5%">-->
+                    <!--                    </td>-->
 
-<!--                </tr>-->
+                </tr>
             </table>
 
 
-<!--                    #fixedbutton {-->
-<!--                    position: fixed;-->
-<!--                    bottom: 5000px;-->
-<!--                    right: auto;-->
-<!--                    left:48%;-->
-<!--                    }-->
-            <div class="btn-group" id="fixedbutton">
-                <button class="btn btn-basic" onclick="javascript:checkIt();" style="color:saddlebrown" type="button">확인</button>
-            </div>
+<!--            <div class="btn-group" id="fixedbutton">-->
+<!--                <button class="btn btn-basic" onclick="javascript:checkIt();" style="color:saddlebrown" type="button">-->
+<!--                    확인-->
+<!--                </button>-->
+<!--            </div>-->
+            <br>
+        </div>
+    </div>
 
-
-
-            {% endblock %}
+    {% endblock %}
 \
