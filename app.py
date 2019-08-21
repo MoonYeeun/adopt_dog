@@ -2,19 +2,14 @@
 from flask import Flask, render_template, request
 # 세션 기능을 위한 모듈
 from flask import session
+# DB 파일 연결
+import db
 import urllib.request
 from urllib.parse import urlencode, quote_plus, unquote
 import xml.etree.ElementTree as ET
 import folium
 import pprint
 import requests
-import pandas as pd
-import numpy as np
-import seaborn as sns
-from tqdm import tqdm_notebook
-import googlemaps as gmaps
-import matplotlib.pyplot as plt
-
 
 decode_key = unquote('WF9v2HhErnR0ovu%2FVJJX8InWINAh4ZaZrMPvZLpcK%2FkXGR3V9%2F3kAQyfKuilCn7LqLPIZlnh97Ed3TxFoLkbrA%3D%3D')  # decode 해줍니다.
 gmaps_key="AIzaSyC2dDq-4r8MTzLsw_7Y2XCe5wwuq46Ve4k"
@@ -24,7 +19,6 @@ app = Flask(__name__)
 
 # 세션을 위한 비밀키 설정
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-dog_imageUrl = ""
 
 # # 라우터 등록 => 웹상 루트 주소 생성
 @app.route('/', methods=['Get'])
@@ -82,7 +76,6 @@ def show_map():
 
 # api에서 유기견 정보 받아오는 함수
 def adopt_dog_api():
-
     url = 'http://openapi.animal.go.kr/openapi/service/rest/abandonmentPublicSrvc/abandonmentPublic'
     # queryParams = '?' + urlencode({quote_plus('ServiceKey'): decode_key,
     #                                quote_plus('upkind'): 417000,
@@ -346,4 +339,4 @@ def park_html(gugu=None):
     return map._repr_html_()
 
 app.run(host='127.0.0.1', port=5000, debug=True)
-# app.run(host='0.0.0.0', port=80)
+
