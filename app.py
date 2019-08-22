@@ -80,17 +80,22 @@ def select_dog(sort='', neutral='', sex=''):
     select = db.get_dog_location(sort,neutral,sex)
 
     location = [37.5103, 126.982]
-    map = folium.Map(location=[37.5103, 126.982], zoom_start=12, titles='Stamen Toner')
-    folium.Marker(location, icon=folium.Icon(color='red')).add_to(map)
-    sorted = ''
+    map = folium.Map(location=[37.5103, 126.982], zoom_start=10, titles='Stamen Toner')
+    folium.Marker(location, icon=folium.Icon(color='blue')).add_to(map)
+
+    check = {}
     for i in select:
         geoData = getGeoData(i['careAddr'])
-        #print(i)
-        sorted += i['desertionNo'] + '/'
-        #print(sorted)
-        # folium.Marker(geoData, popup=i, icon=folium.Icon(color='red')).add_to(map)
+        geo = str(geoData[0])+'/'+ str(geoData[1])
+        print(geo)
+        if geo in check.keys():
+            check[geo] += i['desertionNo'] + '/'
+        else:
+            check[geo] = i['desertionNo'] + '/'
+
         folium.Marker(geoData, popup=folium.Popup(
-            '<a href="http://127.0.0.1:5000/show_dog_list?code=' + sorted + '" target="_self">' + i['careNm'] + '</a>',
+            '<a href="http://127.0.0.1:5000/show_dog_list?code=' + check[geo] + '" target="_top">' + i[
+                'careNm'] + '</a>',
             show=True), icon=folium.Icon(color='red')).add_to(map)
 
     return map._repr_html_()
@@ -232,3 +237,4 @@ def park_html(gugu=None):
     return map._repr_html_()
 
 app.run(host='127.0.0.1', port=5000, debug=True)
+#app.run(host='0.0.0.0', port=80, debug=True)
