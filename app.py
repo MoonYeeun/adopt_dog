@@ -12,6 +12,7 @@ import googlemaps as gmaps
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import db
 
 decode_key = unquote('WF9v2HhErnR0ovu%2FVJJX8InWINAh4ZaZrMPvZLpcK%2FkXGR3V9%2F3kAQyfKuilCn7LqLPIZlnh97Ed3TxFoLkbrA%3D%3D')  # decode 해줍니다.
 gmaps_key="AIzaSyC2dDq-4r8MTzLsw_7Y2XCe5wwuq46Ve4k"
@@ -50,44 +51,6 @@ def bbs():
 def get():
     return render_template('get.html')
 
-# api에서 유기견 정보 받아오는 함수
-def adopt_dog_api():
-    url = 'http://openapi.animal.go.kr/openapi/service/rest/abandonmentPublicSrvc/abandonmentPublic'
-    # queryParams = '?' + urlencode({quote_plus('ServiceKey'): decode_key,
-    #                                quote_plus('upkind'): 417000,
-    #                                quote_plus('upr_cd'): 6110000,
-    #                                quote_plus('pageNo'): 1})
-
-    for n in range(1, 5):
-        pagenum = str(n)
-
-        queryParams = '?' + urlencode({quote_plus('ServiceKey'): decode_key,
-                                       quote_plus('upkind'): 417000,
-                                       # quote_plus('kindCd') : '000115',
-                                       quote_plus('upr_cd'): '6110000',
-                                       # quote_plus('org_cd') : '3220000',
-                                       # 79쪽까지
-                                       quote_plus('pageNo'): pagenum})
-        req = urllib.request
-        body = req.urlopen(url + queryParams)
-        req.get_method = lambda: 'GET'
-        response_body = body.read()
-        result = response_body.decode('utf-8')
-        print('pagenum: '+ pagenum)
-        print(result)
-        tree = ET.ElementTree(ET.fromstring(result))
-        note = tree.getroot()
-        return note
-
-    # req = urllib.request
-    # body = req.urlopen(url + queryParams)
-    # req.get_method = lambda: 'GET'
-    # response_body = body.read()
-    # result = response_body.decode('utf-8')
-    # print(result)
-    # tree = ET.ElementTree(ET.fromstring(result))
-    # return tree.getroot()
-
 # 한글 주소를 위도,경도로 바꿔주는 함수
 def getGeoData(address):
     # Local(테스트) 환경 - https 요청이 필요없고, API Key가 따로 필요하지 않지만 횟수에 제약이 있습니다.
@@ -114,119 +77,73 @@ def getGeoData(address):
 @app.route('/select_dog', methods=['GET'])
 @app.route('/select_dog/<sort>/<neutral>/<sex>')
 def select_dog(sort='', neutral='', sex=''):
-    if sort == '': # 처음 화면
-        location = [37.5103, 126.982]
-        map = folium.Map(location=[37.5103, 126.982], zoom_start=12, titles='Stamen Toner')
-        folium.Marker(location, icon=folium.Icon(color='red')).add_to(map)
-    # 사용자가 선택한 조건에 따른 유기견 검색
-    # location = request.form['location']
-    # sort = request.form['sort']
-    # haircolor = request.form['haircolor']
-    # neutral = request.form['neutral']
-    # sex = request.form['sex']
-    else:
-        sort = sort
-        if neutral == '.':
-            neutral = ''
-        elif sex == '.':
-            sex = ''
-        else:
-            neutral = neutral
-            sex = sex
-        print(sort, neutral, sex)
-        # 주소 담을 리스트
-        dog_data = {}
-        care_location = []
-        note = adopt_dog_api()
+    select = db.get_dog_location(sort,neutral,sex)
 
-        for i in note.iter("item"):
-            if ('보호중' in i.findtext('processState')) & (sort in i.findtext("kindCd")) & (
-                    neutral in i.findtext("neuterYn")) & (sex in i.findtext("sexCd")):
-                print(i.findtext('careAddr'))
-                dog_data[i.findtext('desertionNo')] = i.findtext('careAddr')
-                care_location.append(i.findtext('careNm'))  # 유기견 보호센터 이름
-
-        map = folium.Map(location=[37.5103, 126.982], zoom_start=12, titles='Stamen Toner')
-        num = 0
-        for i in dog_data:
-            geoData = getGeoData(dog_data.get(i))
-            print(i)
-            # folium.Marker(geoData, popup=i, icon=folium.Icon(color='red')).add_to(map)
-            folium.Marker(geoData, popup=folium.Popup(
-                '<a href="http://127.0.0.1:5000/show_dog_list?code=' + i + '" target="_self">' + dog_data[i] + '</a>',
-                show=True), icon=folium.Icon(color='red')).add_to(map)
-            num += 1
-
+    location = [37.5103, 126.982]
+    map = folium.Map(location=[37.5103, 126.982], zoom_start=12, titles='Stamen Toner')
+    folium.Marker(location, icon=folium.Icon(color='red')).add_to(map)
+    sorted = ''
+    for i in select:
+        geoData = getGeoData(i['careAddr'])
+        #print(i)
+        sorted += i['desertionNo'] + '/'
+        #print(sorted)
+        # folium.Marker(geoData, popup=i, icon=folium.Icon(color='red')).add_to(map)
+        folium.Marker(geoData, popup=folium.Popup(
+            '<a href="http://127.0.0.1:5000/show_dog_list?code=' + sorted + '" target="_self">' + i['careNm'] + '</a>',
+            show=True), icon=folium.Icon(color='red')).add_to(map)
 
     return map._repr_html_()
 
 # 사용자가 선택한 강아지 파일 추출
 def make_dog_list(code):
-    dog_list = {}
-    note = adopt_dog_api()
+    dog_list = []
+    dog = db.get_dog_list(code)
+    print(dog)
+    for i in dog:
+        temp = {}
+        temp['사진파일'] = i['filename']
+        temp['품종'] = i['kindCd']
+        temp['성별'] = i['sexCd']
+        temp['중성화여부'] = i['neuterYn']
+        temp['나이'] = i['age']
+        temp['특징'] = i['specialMark']
+        temp['공고기한'] =i['noticeSdt']
+        temp['접수일'] = i['happenDt']
 
-    for i in note.iter("item"):
-        if code in i.findtext('desertionNo'):
-            if '보호중' in i.findtext('processState'):
-                dog_list['사진파일'] = i.findtext('popfile')
-                dog_list['품종'] = i.findtext('kindCd')
-                dog_list['성별'] = i.findtext('sexCd')
-                dog_list['중성화여부'] = i.findtext('neuterYn')
-                dog_list['나이'] = i.findtext('age')
-                dog_list['특징'] = i.findtext('specialMark')
-                notice = i.findtext('noticeSdt') + " ~ " + i.findtext('noticeEdt')
-                dog_list['공고기한'] = notice
-                dog_list['접수일'] = i.findtext('happenDt')
-                break
-            elif '종료(반환)' in i.findtext('processState'):
-                print("종료(반환)된 강아지 입니다. 다른 강아지를 선택해 주세요.")
-            elif '종료(안락사)' in i.findtext('processState'):
-                print("종료(안락사)된 강아지 입니다. 다른 강아지를 선택해 주세요.")
-            elif '종료(입양)' in i.findtext('processState'):
-                print("종료(입양)된 강아지 입니다. 다른 강아지를 선택해 주세요.")
-            else:
-                print("다른 강아지를 선택해 주세요.")
-                # print("특이사항 : "+i.findtext('noticeComment'))
-                # else:
-                #     print('dog - 찾으시는 강아지가 없습니다.')
-                break
+        dog_list.append(temp)
+
     return dog_list
 
 def make_shelter_list(code):
     dog_shelter = []
-    note = adopt_dog_api()
-    for i in note.iter("item"):
-        if code in i.findtext('desertionNo'):
-        # if '411320201901302' in i.findtext('desertionNo'):
-            if '보호중' in i.findtext('processState'):
-                dog_shelter.append(("보호소 이름 : " + i.findtext('careNm')))
-                dog_shelter.append(("보호소 전화번호  : " + i.findtext('careTel')))
-                dog_shelter.append(("보호 장소  : " + i.findtext('careAddr')))
-                dog_shelter.append(("담당자  : " + i.findtext('chargeNm')))
-                dog_shelter.append(("담당자 연락처 : " + i.findtext('officetel')))
-                break
-            elif '종료(반환)' in i.findtext('processState'):
-                print("종료(반환)된 강아지 입니다. 다른 강아지를 선택해 주세요.")
-            elif '종료(안락사)' in i.findtext('processState'):
-                print("종료(안락사)된 강아지 입니다. 다른 강아지를 선택해 주세요.")
-            elif '종료(입양)' in i.findtext('processState'):
-                print("종료(입양)된 강아지 입니다. 다른 강아지를 선택해 주세요.")
-            else:
-                print("다른 강아지를 선택해 주세요.")
-        else:
-            print('shelter - 찾으시는 강아지가 없습니다.')
+    shelter = db.get_shelter_list(code)
+    for i in shelter:
+        temp = {}
+        temp['보호소 이름'] = i['careNm']
+        temp['보호 장소'] = i['careAddr']
+        temp['보호소 전화번호'] = i['careTel']
+        temp['담당자'] = i['chargeNm']
+        temp['담당자 연락처'] = i['officetel']
+
+        dog_shelter.append(temp)
+
     return dog_shelter
 
 @app.route('/show_dog_list', methods=['GET'])
 def show_dog_list():
 
-    dog_code = request.args.get('code')
-    print(dog_code)
+    code = request.args.get('code')
+    code = code.split('/')
+    dog_code =[x for x in code if x != '']
+    for i in dog_code:
+        print(i)
 
     dog_list = make_dog_list(dog_code)
     dog_shelter= make_shelter_list(dog_code)
+    print(dog_list)
 
-    return render_template('show_dog_list.html', dog_image=dog_list['사진파일'], dog_list=dog_list, dog_shelter=dog_shelter )
+    return render_template('show_dog_list.html', dog_list=dog_list, dog_shelter=dog_shelter )
 
 
 
@@ -315,4 +232,3 @@ def park_html(gugu=None):
     return map._repr_html_()
 
 app.run(host='127.0.0.1', port=5000, debug=True)
-
