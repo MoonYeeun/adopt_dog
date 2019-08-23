@@ -94,7 +94,8 @@ def select_dog(sort='', neutral='', sex=''):
             check[geo] = i['desertionNo'] + '/'
 
         folium.Marker(geoData, popup=folium.Popup(
-            '<a href="http://127.0.0.1:5000/show_dog_list?code=' + check[geo] + '" target="_top">' + i[
+            # '<a href="http://127.0.0.1:5000/show_dog_list?code=' + check[geo] + '" target="_top">' + i[
+            '<a href="http://18.191.15.40/show_dog_list?code=' + check[geo] + '" target="_top">' + i[
                 'careNm'] + '</a>',
             show=True), icon=folium.Icon(color='red')).add_to(map)
 
