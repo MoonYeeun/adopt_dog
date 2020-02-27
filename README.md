@@ -1,4 +1,4 @@
-# adopt_dog
+# 🐶 adopt_dog
 반려견을 키우고자 하는 사람들을 위한 맞춤 유기견 매칭 서비스
 
 ## 서비스 소개
@@ -9,7 +9,7 @@
 ## Screen Shots
 HOME
 
-<img width="400" alt="" src="https://user-images.githubusercontent.com/34999925/75478462-60840580-59e1-11ea-853c-68be282aca02.png"><img width="400" alt="" src="https://user-images.githubusercontent.com/34999925/75478473-64b02300-59e1-11ea-82f7-bc10418f18f2.png">
+<img width="400" alt="" src="https://user-images.githubusercontent.com/34999925/75482545-5f0a0b80-59e8-11ea-90b4-56132b9782e2.png"><img width="400" alt="" src="https://user-images.githubusercontent.com/34999925/75482674-9f698980-59e8-11ea-84e9-9a204dfc59e4.png">
 
 Adopt & Convenient
 
