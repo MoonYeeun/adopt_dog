@@ -13,7 +13,7 @@ HOME
 
 Adopt & Convenient
 
-<img width="600" alt="" src="https://user-images.githubusercontent.com/34999925/75481507-8069f800-59e6-11ea-87b4-2d5dceca0869.png"><img width="270" alt="" src="https://user-images.githubusercontent.com/34999925/75480194-2a945080-59e4-11ea-87bc-9ff470e3691b.png">
+<img width="550" alt="" src="https://user-images.githubusercontent.com/34999925/75481817-fe2e0380-59e6-11ea-8b8d-d86004802d85.png"><img width="300" alt="" src="https://user-images.githubusercontent.com/34999925/75480194-2a945080-59e4-11ea-87bc-9ff470e3691b.png">
 
 ## 사용 기술 및 라이브러리
 - 공공데이터 API
