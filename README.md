@@ -25,8 +25,8 @@ Adopt & Convenient
 - Bootstrap
 
 ## 개발환경
-- Frontend: HTML, CSS, python
-- Backend: Flask
+- Front-end: HTML, CSS, python
+- Back-end: Flask
 - Database: Mysql 
 - Data Analysis: Jupyter notebook
 - AWS
